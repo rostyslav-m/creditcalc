@@ -1,0 +1,46 @@
+<h3>
+Your credit shedule is:  
+</h3>
+
+Credit sum: <%= @credit.sum %><br/>
+Credit term: <%= @credit.month %><br/>
+Percent: <%= @credit.perc %><br/>
+
+<% rest = @credit.sum %>
+<% totalpercpay = 0 %>
+<% totalbodypay = 0 %>
+<% totalpayment = 0 %>
+
+<% if @credit.standart %>
+  Credit method: standart<br/><hr>
+  <% bodypay = (@credit.sum/@credit.month).round(2) %>
+  <% for i in 1..@credit.month do %>
+  	<% percpay = (rest * @credit.perc/12.0/100.0).round(2) %>
+    <% totalpercpay = totalpercpay + percpay %>
+  	<% bodypay = rest if i == @credit.month %>
+  	<% totalbodypay = totalbodypay + bodypay %>
+  	<% payment = (bodypay + percpay).round(2) %>
+  	<% totalpayment = totalpayment + payment %>
+  	<% rest = (rest - bodypay).round(2) %>
+    <%= i %> month | pay of body: <%= bodypay %> | percents: <%= percpay %> | month payment: <%= payment %> | rest: <%= rest %> <br/>
+  <% end %>
+<% else %>
+  Credit method: annuity<br/><hr>
+  <% monthpayment = (@credit.sum*(((@credit.perc*0.01/12)*((1+@credit.perc*0.01/12)**@credit.month))/(((1+@credit.perc*0.01/12)**@credit.month)-1))).round(2) %>
+ <% for i in 1..(@credit.month) do %>
+    <% percpay = (rest * @credit.perc/12.0/100.0).round(2) %>
+    <% totalpercpay = totalpercpay + percpay %>
+    <% (monthpayment = rest +  percpay) if (i == @credit.month) %>
+    <% (i == @credit.month) ? (bodypay = rest) : (bodypay = (monthpayment - percpay).round(2)) %>
+    <% totalbodypay = totalbodypay + bodypay %>
+    <% totalpayment = totalpayment + monthpayment %>
+    <% rest = (rest - bodypay).round(2) %>
+    <%= i %> month | pay of body: <%= bodypay %> | percents: <%= percpay %> | month payment: <%= monthpayment %> | rest: <%= rest %> <br/>  
+  <% end %>
+<% end %>
+<hr>
+  Total body payment = <%= totalbodypay.round(2) %><br/>
+  Toal percent = <%= totalpercpay.round(2) %><br/>
+  Total payment = <%= totalpayment.round(2) %><br/><br/>
+
+  <strong><a href="/">Make new credit request</a></strong>

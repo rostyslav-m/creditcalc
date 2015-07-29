@@ -1,0 +1,10 @@
+<strong><a href="/credits/new">make new credits request</a></strong>
+<h2>all credits requests:</h2>
+<% @credits.each do |credit| %>
+<strong>Credit Id: <a href="/credits/<%= credit.id %>"><%= credit.id %></a></strong>
+, credit sum: <a href="/credits/<%= credit.id %>"><%= credit.sum %></a>
+, credit perioad: <a href="/credits/<%= credit.id %>"><%= credit.month %> month </a>
+, credit percent: <a href="/credits/<%= credit.id %>"><%= credit.perc %> %</a></br/>
+
+<% end %>
+
